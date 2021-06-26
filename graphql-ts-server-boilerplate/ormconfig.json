@@ -3,7 +3,7 @@
   "host": "localhost",
   "port": 5432,
   "username": "postgres",
-  "password": "",
+  "password": "Enfield",
   "database": "graphql-ts-server-boilerplate",
   "synchronize": true,
   "logging": false,
