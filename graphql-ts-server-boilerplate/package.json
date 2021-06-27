@@ -15,15 +15,17 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "graphql": "^0.13.2",
     "graphql-import": "^0.7.1",
+    "graphql-tools": "^4.0.8",
     "graphql-yoga": "^1.18.3",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "0.2.34",
+    "typeorm": "^0.2.34",
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "nodemon --exec ts-node --files src/index.ts",
+    "start": "SET NODE_ENV=development & nodemon --exec ts-node --files src/index.ts",
     "gen-schema-types": "gql2ts src/schema.graphql -o src/types/schema.d.ts"
   }
 }
