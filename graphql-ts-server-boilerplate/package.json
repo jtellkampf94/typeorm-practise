@@ -16,6 +16,7 @@
     "yup": "^0.32.9"
   },
   "dependencies": {
+    "@gql2ts/from-schema": "^1.10.1",
     "bcryptjs": "^2.4.3",
     "graphql": "^0.13.2",
     "graphql-import": "^0.7.1",
@@ -29,6 +30,6 @@
   },
   "scripts": {
     "start": "SET NODE_ENV=development & nodemon --exec ts-node --files src/index.ts",
-    "gen-schema-types": "gql2ts src/schema.graphql -o src/types/schema.d.ts"
+    "gen-schema-types": "ts-node --files src/scripts/createTypes.ts"
   }
 }
