@@ -1,4 +1,3 @@
-import { User } from "./entity/User";
 import "reflect-metadata";
 import { GraphQLSchema } from "graphql";
 import { createConnection } from "typeorm";
@@ -6,8 +5,10 @@ import { importSchema } from "graphql-import";
 import { GraphQLServer } from "graphql-yoga";
 import * as path from "path";
 import * as fs from "fs";
-import * as Redis from "ioredis";
 import { mergeSchemas, makeExecutableSchema } from "graphql-tools";
+
+import { confirmEmail } from "./routes/confirmEmail";
+import { redis } from "./redis";
 
 export const startServer = async () => {
   const schemas: GraphQLSchema[] = [];
@@ -20,8 +21,6 @@ export const startServer = async () => {
     schemas.push(makeExecutableSchema({ resolvers, typeDefs }));
   });
 
-  const redis = new Redis();
-
   const server = new GraphQLServer({
     schema: mergeSchemas({ schemas }),
     context: ({ request }) => ({
@@ -30,16 +29,7 @@ export const startServer = async () => {
     })
   });
 
-  server.express.get("/confirm/:id", async (req, res) => {
-    const { id } = req.params;
-    const userId = await redis.get(id);
-    if (userId) {
-      await User.update({ id: userId }, { confirmed: true });
-      res.send("ok");
-    } else {
-      res.send("invalid");
-    }
-  });
+  server.express.get("/confirm/:id", confirmEmail);
   await createConnection();
   await server.start();
   console.log("Server is running on localhost:4000");
