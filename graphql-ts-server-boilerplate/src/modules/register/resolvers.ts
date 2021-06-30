@@ -1,8 +1,11 @@
-import { formatYupError } from "./../../utils/formatYupError";
 import * as bcrypt from "bcryptjs";
 import * as yup from "yup";
+
+import { createConfirmEmailLink } from "./../../utils/createConfirmEmailLink";
+import { formatYupError } from "./../../utils/formatYupError";
 import { User } from "../../entity/User";
 import { ResolverMap } from "../../types/graphql-utils";
+import { sendEmail } from "../../utils/sendEmail";
 
 const schema = yup.object().shape({
   email: yup
@@ -21,7 +24,11 @@ export const resolvers: ResolverMap = {
     hi: () => "hi"
   },
   Mutation: {
-    register: async (_, args: GQL.IRegisterOnMutationArguments) => {
+    register: async (
+      _,
+      args: GQL.IRegisterOnMutationArguments,
+      { redis, url }
+    ) => {
       try {
         await schema.validate(args, { abortEarly: false });
       } catch (error) {
@@ -47,6 +54,9 @@ export const resolvers: ResolverMap = {
       });
 
       await user.save();
+
+      await sendEmail(email, await createConfirmEmailLink(url, user.id, redis));
+
       return null;
     }
   }
