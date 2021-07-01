@@ -1,10 +1,13 @@
 import "reflect-metadata";
 import { GraphQLServer } from "graphql-yoga";
 import { createConnection } from "typeorm";
+import * as dotenv from "dotenv";
 
 import { confirmEmail } from "./routes/confirmEmail";
 import { redis } from "./redis";
 import { generateSchema } from "./utils/generateSchema";
+
+dotenv.config();
 
 export const startServer = async () => {
   const server = new GraphQLServer({
